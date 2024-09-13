@@ -12,6 +12,21 @@
         }
     ],
     "paths": {
+        "/companies": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Get all companies",
+                "description": "Description",
+                "operationId": "TestId",
+                "responses": {
+                    "200": {
+                        "description": "Response Message"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "tags": [
@@ -39,6 +54,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Companies",
+            "description": "Companies"
+        },
         {
             "name": "Users",
             "description": "Users"
