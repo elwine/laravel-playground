@@ -9,4 +9,3 @@ export const apiClient = axios.create({
     // You can add other headers like authorization token here
   },
 });
-
