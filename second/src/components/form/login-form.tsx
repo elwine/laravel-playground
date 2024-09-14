@@ -4,13 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { apiClient } from "@/lib/api-client";
 
 
 const loginSchema = z.object({
@@ -21,13 +15,12 @@ const loginSchema = z.object({
   }),
   password: z.string({
     required_error: "Vui lòng nhập mật khẩu."
-  }).max(32, "Mật khẩu không được quá 32 ký tự.").min(8, "Mật khẩu không được ít hơn 8 kí tự"),
-  accountType: z.enum(["personal", 'company'])
+  }).max(32, "Mật khẩu không được quá 32 ký tự.").min(8, "Mật khẩu không được ít hơn 8 kí tự")
 })
 
 
 const handleLoginSubmit = (values: z.infer<typeof loginSchema>) => {
-  console.log(values)
+  apiClient.post('/auth/login', values).then(console.log)
 }
 
 
@@ -36,8 +29,7 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: "",
-      accountType: "personal"
+      password: ""
     }
   })
 
@@ -49,7 +41,7 @@ export function LoginForm() {
           return <FormItem>
             <FormLabel>Email Address</FormLabel>
             <FormControl>
-              <Input placeholder="Enter your email address" type="email" {...field} />
+              <Input placeholder="Vui lòng nhập địa chỉ email." type="email" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -60,33 +52,13 @@ export function LoginForm() {
           return <FormItem>
             <FormLabel>Password</FormLabel>
             <FormControl>
-              <Input placeholder="Your password" type="password" {...field} />
+              <Input placeholder="Vui lòng nhập mật khẩu." type="password" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
         }}>
         </FormField>
 
-        {/* === ACCOUNT TYPE FIELD */}
-        <FormField name="accountType" control={form.control} render={(({ field }) => {
-          return <FormItem>
-            <FormLabel>Account type</FormLabel>
-            <FormMessage />
-            <FormControl>
-              <Select onValueChange={field.onChange} defaultValue="personal">
-                <SelectTrigger >
-                  <SelectValue placeholder="Your account type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="personal" defaultChecked>Personal</SelectItem>
-                  <SelectItem value="company">Company</SelectItem>
-                </SelectContent>
-              </Select>
-
-            </FormControl>
-          </FormItem>
-        })}>
-        </FormField>
 
         <Button className="w-fit mt-3" type="submit">Login</Button>
       </form>

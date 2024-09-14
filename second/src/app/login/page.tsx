@@ -8,7 +8,7 @@ export default function LoginPage() {
   
   return (
     <main className="py-8">
-      <h1 className="text-5xl  font-bold text-center mb-12">Login bro</h1>
+      <h1 className="text-5xl font-bold text-center mb-12">Login bro</h1>
       <LoginForm />
     </main>
   );
