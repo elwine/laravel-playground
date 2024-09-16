@@ -1,20 +1,32 @@
-
+"use server";
 import * as z from "zod";
 import { apiClient } from "@/lib/api-client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { loginSchema } from "@/schemas/login-schema";
 
-
-export const loginSchema = z.object({
-  email: z.string({
-    required_error: "Vui lòng nhập email.",
-  }).email({
-    message: "Vui lòng nhập email hợp lệ."
-  }),
-  password: z.string({
-    required_error: "Vui lòng nhập mật khẩu."
-  }).max(32, "Mật khẩu không được quá 32 ký tự.").min(8, "Mật khẩu không được ít hơn 8 kí tự")
-})
-
-
-export const handleLogin = (values: z.infer<typeof loginSchema>) => {
-    apiClient.post('/auth/login', values).then(console.log)
+interface ILoginResponse {
+  success: boolean;
+  message: string;
+  token?: string;
 }
+
+export const handleLogin = async (formData: FormData) => {
+  // get the form data form the formData object
+  const values = Object.fromEntries(formData) as z.infer<typeof loginSchema>;
+
+  const res = await apiClient.post<ILoginResponse>("/auth/login", values);
+  if (res.statusText != "OK") return false;
+
+  const { success, token } = res.data;
+
+  if (!success) return false;
+
+  cookies().set("token", token!, {
+    httpOnly: true,
+    secure: false,
+    path: "/",
+    maxAge: 60 * 60 * 24,
+  });
+  redirect("/");
+};
