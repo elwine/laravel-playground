@@ -9,10 +9,14 @@ export function ToastProvider() {
   const pathName = usePathname();
   const cookieName = "toast-message";
 
+  // listen to page change
   useEffect(() => {
     const message = getCookie(cookieName);
     if (!message) return;
+
+    // sending toast message
     toast(message);
+    // delete the cookie
     deleteCookie(cookieName);
   }, [pathName]);
 

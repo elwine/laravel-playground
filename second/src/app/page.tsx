@@ -41,9 +41,14 @@ export default function Home() {
             />
             Deploy now
           </a>
-          <Link href={"/login"}>
-            <Button>Login</Button>
-          </Link>
+          <div className="flex gap-6">
+            <Link href={"/login"}>
+              <Button>Login</Button>
+            </Link>
+            <Link href={"/profile"}>
+              <Button>Profile</Button>
+            </Link>
+          </div>
         </div>
       </main>
       <footer className="flex flex-wrap justify-center items-center gap-6 row-start-3">
