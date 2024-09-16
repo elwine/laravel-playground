@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { setNotifyToast } from "./lib/toast-notify";
 import { getProfile } from "./lib/get-profile";
+import { setSession } from "./lib/session";
 
 export const middleware = async (req: NextRequest) => {
   const path = req.nextUrl.pathname;
@@ -8,6 +9,7 @@ export const middleware = async (req: NextRequest) => {
     const token = req.cookies.get("token");
     const targetUrl = new URL("/login", req.url);
 
+    // NEXT REPSONE INSTANCE TO REDICT TO LOGIN PAGE
     const errResponse = setNotifyToast(
       NextResponse.redirect(targetUrl),
       "Vui lòng đăng nhập",
@@ -20,12 +22,11 @@ export const middleware = async (req: NextRequest) => {
     // verify
     const result = await getProfile(token.value);
     if (!result) return errResponse;
-
     const { success, user } = result;
 
     if (!success) return errResponse;
 
-    console.log(user);
+    setSession(token.value, user);
   }
 };
 
