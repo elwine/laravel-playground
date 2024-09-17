@@ -4,21 +4,17 @@ import { getProfile } from "./lib/get-profile";
 import { setSession } from "./lib/session";
 
 export const middleware = async (req: NextRequest) => {
+  const loginUrl = new URL("/login", req.url);
+  // NEXT REPSONE INSTANCE TO REDICT TO LOGIN PAGE
+  const errResponse = setNotifyToast(
+    NextResponse.redirect(loginUrl),
+    "Vui lòng đăng nhập",
+  );
+
   const path = req.nextUrl.pathname;
-  if (path.startsWith("/profile")) {
-    const token = req.cookies.get("token");
-    const targetUrl = new URL("/login", req.url);
+  const token = req.cookies.get("token");
 
-    // NEXT REPSONE INSTANCE TO REDICT TO LOGIN PAGE
-    const errResponse = setNotifyToast(
-      NextResponse.redirect(targetUrl),
-      "Vui lòng đăng nhập",
-    );
-
-    if (!token) {
-      return errResponse;
-    }
-
+  if (token) {
     // verify
     const result = await getProfile(token.value);
     if (!result) return errResponse;
@@ -27,6 +23,12 @@ export const middleware = async (req: NextRequest) => {
     if (!success) return errResponse;
 
     setSession(token.value, user);
+  }
+
+  if (path.startsWith("/profile")) {
+    if (!token) {
+      return errResponse;
+    }
   }
 };
 
