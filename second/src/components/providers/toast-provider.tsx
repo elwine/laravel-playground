@@ -7,17 +7,16 @@ import { getCookie, deleteCookie } from "cookies-next";
 
 export function ToastProvider() {
   const pathName = usePathname();
-  const cookieName = "toast-message";
 
   // listen to page change
   useEffect(() => {
-    const message = getCookie(cookieName);
+    const message = getCookie("toast-message");
     if (!message) return;
 
     // sending toast message
     toast(message);
     // delete the cookie
-    deleteCookie(cookieName);
+    deleteCookie("toast-message");
   }, [pathName]);
 
   return (

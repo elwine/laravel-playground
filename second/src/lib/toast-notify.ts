@@ -9,7 +9,7 @@ export const setNotifyToast = (
   res.cookies.set("toast-message", message, {
     httpOnly: false,
     path: "/",
-    maxAge: 9,
+    maxAge: 6,
   });
   return res;
 };
